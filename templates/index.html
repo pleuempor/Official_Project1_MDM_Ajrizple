@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Preis Vorhersage</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script>
+    async function predictPrice() {
+        let score = document.getElementById("score").value;
+        let reviewsCount = document.getElementById("reviews_count").value;
+        let response = await fetch('/predict', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({score: score, "reviews_count": reviewsCount})
+        });
+        let data = await response.json();
+        if (data.predicted_price) {
+            alert('Vorhergesagter Preis: ' + data.predicted_price.toFixed(2));
+        } else if (data.error) {
+            alert('Fehler: ' + data.error);
+        }
+    }
+    </script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Hotel Preis Vorhersage</h2>
+        <form onsubmit="event.preventDefault(); predictPrice();">
+            <div class="form-group">
+                <label for="score">Score (Wert zwischen 1 und 10):</label>
+                <input type="number" class="form-control" id="score" required min="1" max="10" step="0.1" placeholder="1-10">
+                <small class="form-text text-muted">Bitte geben Sie einen Wert zwischen 1 und 10 ein.</small>
+            </div>
+            <div class="form-group">
+                <label for="reviews_count">Reviews Count:</label>
+                <input type="number" class="form-control" id="reviews_count" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Vorhersagen</button>
+        </form>
+        <p class="mt-4">
+            Dieses ML Modell dient nur zu experimentellen Zwecken. Ziel der Analyse war es zu erforschen, welchen Einfluss der Bewertungsscore und die Anzahl Bewertungen auf den Preis pro Nacht eines Hotels haben. Es ist zu beachten, dass Hotels frei sind die Preise zu bestimmen und dass die Definition des Preises nicht durch bestimmte Variablen gesteuert wird.
+        </p>
+        <p>Mehr Infos zu der Preisbestimmung von Hotelzimmern findest du unter: 
+            <a href="https://www.siteminder.com/de/r/ein-leitfaden-hotelpreisgestaltung-optimierung-der-zimmerraten/">SiteMinder</a> und 
+            <a href="https://partner.booking.com/en-gb/help/channel-manager/availability/understanding-pricing-guest-models">Booking.com Partner</a>.
+        </p>
+    </div>
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
