@@ -1,0 +1,34 @@
+name: run mdmproject1
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: checkout repo content
+        uses: actions/checkout@v3 # checkout the repo content to github runner.
+
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+         python-version: '3.12.1' # install python version needed for the project
+         cache: 'pip'
+
+      - name: install python packages
+        run: pip install -r requirements.txt
+
+      - name: execute py script
+        run: python bookingscraper.py
+
+      - name: load data to mongodb variables are not secret for mongodb
+        run: python mongodb.py
+
+      - name: generate model
+        run: python model.py
+
+      - name: save model to Azure Blob
+        run: python save.py -c "${{secrets.AZURE_STORAGE_CONNECTION_STRING}}"
