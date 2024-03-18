@@ -21,6 +21,9 @@ jobs:
       - name: install python packages
         run: pip install -r requirements.txt
 
+      - name: Install Playwright Browsers
+        run: playwright install
+
       - name: execute py script
         run: python bookingscraper.py
 
