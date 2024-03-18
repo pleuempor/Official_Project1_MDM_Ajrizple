@@ -12,11 +12,11 @@ def main():
         checkout_date = '2024-05-26'
         
         base_url = f'https://www.booking.com/searchresults.html?ss=Switzerland&ssne=Switzerland&ssne_untouched=Switzerland&efdco=1&label=gen173nr-1FCAQoggI46wdIMVgEaCyIAQGYATG4ARfIAQzYAQHoAQH4AQOIAgGoAgO4ArGXwa8GwAIB0gIkODRjM2NjNzItZmU3Mi00YmNlLTliMDYtOTViMDJjNDhhMGZi2AIF4AIB&aid=304142&lang=en-us&sb=1&src_elem=sb&src=searchresults&dest_id=204&dest_type=country&checkin={checkin_date}&checkout={checkout_date}&group_adults=1&no_rooms=1&group_children=0'
-        browser = p.firefox.launch(headless=False)
+        browser = p.firefox.launch(headless=True)
         page = browser.new_page()
         hotels_list = []
 
-        for page_num in range(30):  # 30 Seiten durchgehen
+        for page_num in range(1):  # 30 Seiten durchgehen
             offset = page_num * 25
             page_url = f"{base_url}&offset={offset}"
             page.goto(page_url, timeout=60000)
