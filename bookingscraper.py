@@ -1,6 +1,7 @@
+#Import Statements für Scraper
 from playwright.sync_api import sync_playwright
 import pandas as pd
-import re
+
 
 
 
@@ -16,7 +17,7 @@ def main():
         page = browser.new_page()
         hotels_list = []
 
-        for page_num in range(1):  # 30 Seiten durchgehen
+        for page_num in range(10):  # 10 Seiten durchgehen mit jeweils 25 Datensätzen
             offset = page_num * 25
             page_url = f"{base_url}&offset={offset}"
             page.goto(page_url, timeout=60000)

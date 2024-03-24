@@ -15,19 +15,19 @@ def get_latest_container_version(blob_service_client, prefix):
     return max_version
 
 def main(connection_string):
-    local_file_path = "hotel_price_prediction_model.pkl"  # Setze hier den festen Pfad zu deinem Modell
+    local_file_path = "hotel_price_prediction_model.pkl"  
     blob_service_client = create_blob_service_client(connection_string)
     prefix = "score-prediction-modell-v"
     latest_version = get_latest_container_version(blob_service_client, prefix)
     new_version = latest_version + 1
     new_container_name = f"{prefix}{new_version}"
 
-    # Create new container for the model
+    
     container_client = blob_service_client.create_container(new_container_name)
 
     blob_client = container_client.get_blob_client("model")
 
-    # Upload the model
+   
     with open(local_file_path, "rb") as data:
         blob_client.upload_blob(data)
 

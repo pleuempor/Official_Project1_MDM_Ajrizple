@@ -17,12 +17,12 @@ from sklearn.metrics import median_absolute_error
 
 
 
-# Verbindung zu Cosmos DB herstellen
+
 client = MongoClient('mongodb+srv://mongodb:project1.@mongodb-p1-ajrizple.mongocluster.cosmos.azure.com/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000')
 db = client['MDMProjectOne']
 collection = db['HotelSummary']
 
-# Daten aus MongoDB extrahieren
+
 documents = collection.find({})
 df = pd.DataFrame(list(documents))
 
@@ -32,23 +32,17 @@ df['score'] = df['score'].astype(float)
 df['is_25_may'] = df['date'].apply(lambda x: 1 if x == "2024-05-25" else 0)
 
 
-# Die Features umfassen 'score', 'reviews count' sowie die One-Hot-Encoded 'avg review' Variablen
 X = df[['score', 'reviews count']].values
-y = df['price'].values.astype(float)  # Preis als Float
+y = df['price'].values.astype(float)  
 
-# Aufteilung der Daten in Trainings- und Testdaten
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Wähle den Grad des Polynoms (z.B. 2 für quadratisch, 3 für kubisch, usw.)
 polynomial_degree = 2
 
-# Erstelle ein Pipeline-Objekt, das zunächst die Polynom-Features generiert und dann lineare Regression anwendet
 model = make_pipeline(PolynomialFeatures(degree=polynomial_degree), LinearRegression())
 
-# Trainiere das Modell mit den Trainingsdaten
 model.fit(X_train, y_train)
 
-# Modellbewertung mit den Testdaten
 y_pred = model.predict(X_test)
 mse = mean_squared_error(y_test, y_pred)
 r2 = model.score(X_test, y_test)
@@ -67,18 +61,13 @@ for col in df.columns:
         
 corr = df.corr()
 
-# Heatmap erstellen
 sns.heatmap(corr, annot=True, fmt=".2f", cmap='coolwarm')
 
-# Titel hinzufügen
 plt.title('Korrelationsmatrix')
 
-# Zeige die Heatmap an
 plt.show()
 
-# Verbindung schließen
 client.close()
 
-# Das trainierte Modell speichern
 import joblib
 joblib.dump(model, 'hotel_price_prediction_model.pkl')
