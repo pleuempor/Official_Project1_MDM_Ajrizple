@@ -1,6 +1,6 @@
 # Usage
 # docker build -t pleuzhaw/bookingscraper .
-# docker run --name bookingscraper -e AZURE_STORAGE_CONNECTION_STRING='***' -p 9001:5000 -d pleuzhaw/bookingscraper
+# docker run --name bookingscraper -e AZURE_STORAGE_CONNECTION_STRING='***' -p 9001:80 -d pleuzhaw/bookingscraper
 
 FROM python:3.12.1
 
